@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
+using UserManagement.Services.Dtos;
 using UserManagement.Web.Enums;
 using UserManagement.Web.Models.Users;
 using UserManagement.WebMS.Controllers;
@@ -54,11 +56,11 @@ public class UserControllerTests
             .Should().BeOfType<UserListViewModel>().Which.Items.Should().AllSatisfy(i => i.IsActive.Should().BeFalse());
     }
 
-    private User[] SetupUsers(string forename = "Johnny", string surname = "User", string email = "juser@example.com", bool isActive = true)
+    private List<UserDto> SetupUsers(string forename = "Johnny", string surname = "User", string email = "juser@example.com", bool isActive = true)
     {
-        var users = new[]
+        var users = new List<UserDto>()
         {
-            new User
+            new UserDto
             {
                 Forename = forename,
                 Surname = surname,

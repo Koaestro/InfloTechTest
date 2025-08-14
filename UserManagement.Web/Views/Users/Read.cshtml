@@ -1,0 +1,32 @@
+﻿@model UserReadViewModel
+
+@{
+    ViewData["Title"] = "Read User";
+}
+
+<h2>User Details</h2>
+
+<div class="form-group">
+    <label>Forename</label>
+    <input class="form-control" value="@Model.Forename" readonly />
+</div>
+
+<div class="form-group">
+    <label>Surname</label>
+    <input class="form-control" value="@Model.Surname" readonly />
+</div>
+
+<div class="form-group">
+    <label>Email</label>
+    <input class="form-control" value="@Model.Email" readonly />
+</div>
+
+<div class="form-group">
+    <label>Is Active</label>
+    <input class="form-control" value="@(Model.IsActive ? "Yes" : "No")" readonly />
+</div>
+
+<div class="form-group">
+    <label>Date of Birth</label>
+    <input class="form-control" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")" readonly />
+</div>

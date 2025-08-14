@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using UserManagement.Models;
 
@@ -36,6 +37,12 @@ public class DataContext : DbContext, IDataContext
     {
         base.Add(entity);
         SaveChanges();
+    }
+
+    public async Task CreateAsync<TEntity>(TEntity entity) where TEntity : class
+    {
+        await base.AddAsync(entity);
+        await SaveChangesAsync();
     }
 
     public new void Update<TEntity>(TEntity entity) where TEntity : class

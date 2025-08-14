@@ -1,4 +1,4 @@
-﻿@model UserManagement.Web.Models.Users.UserListViewModel
+﻿@model UserListViewModel
 @using UserManagement.Web.Enums
 
 <h2>User List</h2>
@@ -10,6 +10,7 @@
                 <th>Id</th>
                 <th>Forename</th>
                 <th>Surname</th>
+                <th>DOB</th>
                 <th>Email</th>
                 <th>Account Active</th>
                 <th style="width: 1px;"></th>
@@ -27,6 +28,9 @@
                     </td>
                     <td>
                         @item.Surname
+                    </td>
+                    <td>
+                        @item.DateOfBirth.ToString("")
                     </td>
                     <td>
                         @item.Email

@@ -1,6 +1,7 @@
 using System.Linq;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Implementations;
+using UserManagement.Services.Dtos;
 
 namespace UserManagement.Data.Tests;
 
@@ -11,7 +12,7 @@ public class UserServiceTests
     {
         // Arrange: Initializes objects and sets the value of the data that is passed to the method under test.
         var service = CreateService();
-        var users = SetupUsers();
+        var users = SetupUsers().Select(u => new UserDto(u));
 
         // Act: Invokes the method under test with the arranged parameters.
         var result = service.GetAll();

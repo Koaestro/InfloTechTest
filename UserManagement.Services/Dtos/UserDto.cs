@@ -1,8 +1,8 @@
 ﻿using System;
 using UserManagement.Models;
 
-namespace UserManagement.Data.Dtos;
-internal class UserDto
+namespace UserManagement.Services.Dtos;
+public class UserDto
 {
     public UserDto()
     {

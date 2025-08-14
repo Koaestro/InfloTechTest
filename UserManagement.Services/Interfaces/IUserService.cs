@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using UserManagement.Models;
+using System.Threading.Tasks;
+using UserManagement.Services.Dtos;
 
 namespace UserManagement.Services.Domain.Interfaces;
 
@@ -10,6 +11,7 @@ public interface IUserService
     /// </summary>
     /// <param name="isActive"></param>
     /// <returns></returns>
-    IEnumerable<User> FilterByActive(bool isActive);
-    IEnumerable<User> GetAll();
+    IEnumerable<UserDto> FilterByActive(bool isActive);
+    IEnumerable<UserDto> GetAll();
+    Task<long> CreateUser(UserDto userDto);
 }
