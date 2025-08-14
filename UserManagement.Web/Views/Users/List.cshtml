@@ -1,4 +1,5 @@
 ﻿@model UserManagement.Web.Models.Users.UserListViewModel
+@using UserManagement.Web.Enums
 
 <h2>User List</h2>
 
@@ -53,9 +54,9 @@
 
 <div>
     <div class="btn-group" role="group">
-        <a asp-controller="Users" asp-action="List" class="btn btn-default">Show All</a>
-        <a href="#" class="btn btn-default">Active Only</a>
-        <a href="#" class="btn btn-default">Non Active</a>
+        <a asp-controller="Users" asp-action="List" asp-route-filter="@UserFilter.All" class="btn btn-default">Show All</a>
+        <a asp-controller="Users" asp-action="List" asp-route-filter="@UserFilter.Active" class="btn btn-default">Active Only</a>
+        <a asp-controller="Users" asp-action="List" asp-route-filter="@UserFilter.Inactive" class="btn btn-default">Non Active</a>
     </div>
 
     <a href="#" class="btn btn-primary float-end">

@@ -1,5 +1,6 @@
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
+using UserManagement.Web.Enums;
 using UserManagement.Web.Models.Users;
 using UserManagement.WebMS.Controllers;
 
@@ -21,6 +22,36 @@ public class UserControllerTests
         result.Model
             .Should().BeOfType<UserListViewModel>()
             .Which.Items.Should().BeEquivalentTo(users);
+    }
+
+    [Fact]
+    public void List_WhenFilteredByActive_ModelMustOnlyContainActiveUsers()
+    {
+        // Arrange: Initializes objects and sets the value of the data that is passed to the method under test.
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        // Act: Invokes the method under test with the arranged parameters.
+        var result = controller.List(UserFilter.Active);
+
+        // Assert: Verifies that the action of the method under test behaves as expected.
+        result.Model
+            .Should().BeOfType<UserListViewModel>().Which.Items.Should().AllSatisfy(i => i.IsActive.Should().BeTrue());
+    }
+
+    [Fact]
+    public void List_WhenFilteredByInActive_ModelMustOnlyContainInActiveUsers()
+    {
+        // Arrange: Initializes objects and sets the value of the data that is passed to the method under test.
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        // Act: Invokes the method under test with the arranged parameters.
+        var result = controller.List(UserFilter.Inactive);
+
+        // Assert: Verifies that the action of the method under test behaves as expected.
+        result.Model
+            .Should().BeOfType<UserListViewModel>().Which.Items.Should().AllSatisfy(i => i.IsActive.Should().BeFalse());
     }
 
     private User[] SetupUsers(string forename = "Johnny", string surname = "User", string email = "juser@example.com", bool isActive = true)
