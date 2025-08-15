@@ -2,13 +2,13 @@
 using UserManagement.Models;
 
 namespace UserManagement.Services.Dtos;
-public class UserDto
+public class UserReadDto
 {
-    public UserDto()
+    public UserReadDto()
     {
 
     }
-    public UserDto(User user)
+    public UserReadDto(User user)
     {
         Id = user.Id;
         Forename = user.Forename;
@@ -18,10 +18,10 @@ public class UserDto
         DateOfBirth = user.DateOfBirth;
     }
 
-    public long? Id { get; set; }
-    public string Forename { get; set; } = default!;
-    public string Surname { get; set; } = default!;
-    public string Email { get; set; } = default!;
+    public long Id { get; set; }
+    public string Forename { get; set; }
+    public string Surname { get; set; }
+    public string Email { get; set; }
     public bool IsActive { get; set; }
 
     public DateTime DateOfBirth { get; set; }

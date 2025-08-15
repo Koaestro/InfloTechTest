@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using UserManagement.Data.Entities;
 using UserManagement.Models;
 
 namespace UserManagement.Data;
@@ -33,6 +34,9 @@ public class DataContext : DbContext, IDataContext
     public IQueryable<TEntity> GetAll<TEntity>() where TEntity : class
         => base.Set<TEntity>();
 
+    public Task<TEntity?> GetById<TEntity>(long id) where TEntity : class, IEntity
+        => base.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);
+
     public void Create<TEntity>(TEntity entity) where TEntity : class
     {
         base.Add(entity);
@@ -51,9 +55,21 @@ public class DataContext : DbContext, IDataContext
         SaveChanges();
     }
 
+    public async Task UpdateAsync<TEntity>(TEntity entity) where TEntity : class
+    {
+        base.Update(entity);
+        await SaveChangesAsync();
+    }
+
     public void Delete<TEntity>(TEntity entity) where TEntity : class
     {
         base.Remove(entity);
         SaveChanges();
+    }
+
+    public async Task DeleteAsync<TEntity>(TEntity entity) where TEntity : class
+    {
+        base.Remove(entity);
+        await SaveChangesAsync();
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
 using UserManagement.Services.Dtos;
+using UserManagement.Web.Controllers;
 using UserManagement.Web.Enums;
 using UserManagement.Web.Models.Users;
 using UserManagement.WebMS.Controllers;

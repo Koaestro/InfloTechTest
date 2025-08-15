@@ -44,9 +44,11 @@
                                 Actions
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="btnToggleActions">
-                                <li><a class="dropdown-item" href="#">View</a></li>
-                                <li><a class="dropdown-item" href="#">Edit</a></li>
-                                <li><a class="dropdown-item" href="#">Delete</a></li>
+                                <li><a class="dropdown-item" asp-controller="@UsersController.NAME" asp-action="@nameof(UsersController.Read)" asp-route-userId="@item.Id">View</a></li>
+                                <li><a class="dropdown-item" asp-controller="@UsersController.NAME" asp-action="@nameof(UsersController.Update)" asp-route-userId="@item.Id">Edit</a></li>
+                                <form asp-action="@nameof(UsersController.Delete)" asp-route-userId="@item.Id" method="post" onsubmit="confirmThenSubmit(event, 'Are you sure you want to delete user Id @item.Id')" style="display:inline;">
+                                    <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                </form>
                             </ul>
                         </div>
                     </td>
@@ -58,13 +60,12 @@
 
 <div>
     <div class="btn-group" role="group">
-        <a asp-controller="Users" asp-action="List" asp-route-filter="@UserFilter.All" class="btn btn-default">Show All</a>
-        <a asp-controller="Users" asp-action="List" asp-route-filter="@UserFilter.Active" class="btn btn-default">Active Only</a>
-        <a asp-controller="Users" asp-action="List" asp-route-filter="@UserFilter.Inactive" class="btn btn-default">Non Active</a>
+        <a asp-controller="@UsersController.NAME" asp-action="@nameof(UsersController.List)" asp-route-filter="@UserFilter.All" class="btn btn-default">Show All</a>
+        <a asp-controller="@UsersController.NAME" asp-action="@nameof(UsersController.List)" asp-route-filter="@UserFilter.Active" class="btn btn-default">Active Only</a>
+        <a asp-controller="@UsersController.NAME" asp-action="@nameof(UsersController.List)" asp-route-filter="@UserFilter.Inactive" class="btn btn-default">Non Active</a>
     </div>
 
-    <a href="#" class="btn btn-primary float-end">
-        Add User
-    </a>
+
+    <a asp-controller="@UsersController.NAME" asp-action="@nameof(UsersController.Create)" class="btn btn-primary float-end">Add User</a>
 </div>
 

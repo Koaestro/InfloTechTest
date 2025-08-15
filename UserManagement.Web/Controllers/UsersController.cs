@@ -6,12 +6,12 @@ using UserManagement.Services.Dtos;
 using UserManagement.Web.Enums;
 using UserManagement.Web.Models.Users;
 
-namespace UserManagement.WebMS.Controllers;
+namespace UserManagement.Web.Controllers;
 
 [Route("users")]
 public class UsersController : Controller
 {
-    public const string NAME = "users";
+    public static readonly string NAME = "Users";
 
     private readonly IUserService _userService;
     public UsersController(IUserService userService) => _userService = userService;
@@ -32,7 +32,7 @@ public class UsersController : Controller
 
             var items = users.Select(p => new UserListItemViewModel
             {
-                Id = p.Id ?? -1,
+                Id = p.Id,
                 Forename = p.Forename,
                 Surname = p.Surname,
                 Email = p.Email,
@@ -77,7 +77,7 @@ public class UsersController : Controller
                 return View(user);
             }
 
-            UserDto userDto = new()
+            UserWriteDto userDto = new()
             {
                 Forename = user.Forename,
                 Surname = user.Surname,
@@ -99,14 +99,15 @@ public class UsersController : Controller
     }
 
     [HttpGet("{userId}")]
-    public ViewResult Read(long userId)
+    public async Task<ViewResult> Read(long userId)
     {
         try
         {
-            var user = _userService.GetAll().Where(u => u.Id == userId).FirstOrDefault();
+            var user = await _userService.GetUser(userId);
 
             UserReadViewModel vm = new()
             {
+                Id = user.Id,
                 Forename = user.Forename,
                 Surname = user.Surname,
                 Email = user.Email,
@@ -124,11 +125,22 @@ public class UsersController : Controller
 
 
     [HttpGet("update/{userId}")]
-    public ViewResult Update(long userId)
+    public async Task<ViewResult> Update(long userId)
     {
         try
         {
-            return View();
+            var user = await _userService.GetUser(userId);
+
+            UserUpdateViewModel viewModel = new()
+            {
+                Forename = user.Forename,
+                Surname = user.Surname,
+                Email = user.Email,
+                IsActive = user.IsActive,
+                DateOfBirth = user.DateOfBirth
+            };
+
+            return View(viewModel);
         }
         catch (Exception ex)
         {
@@ -136,17 +148,58 @@ public class UsersController : Controller
         }
     }
 
-
-    [HttpGet("delete/{userId}")]
-    public ViewResult Delete(long userId)
+    [HttpPost("update/{userId}")]
+    public async Task<IActionResult> Update(long userId, UserUpdateViewModel user)
     {
         try
         {
-            return View();
+            if (!ModelState.IsValid)
+            {
+                // Return the same view with validation errors
+                return View(user);
+            }
+
+            var userUpdate = new UserWriteDto()
+            {
+                Id = userId,
+                Forename = user.Forename,
+                Surname = user.Surname,
+                Email = user.Email,
+                IsActive = user.IsActive,
+                DateOfBirth = user.DateOfBirth
+            };
+
+            var updatedUser = await _userService.UpdateUser(userUpdate);
+
+            UserUpdateViewModel viewModel = new()
+            {
+                Forename = updatedUser.Forename,
+                Surname = updatedUser.Surname,
+                Email = updatedUser.Email,
+                IsActive = updatedUser.IsActive,
+                DateOfBirth = updatedUser.DateOfBirth
+            };
+
+            return RedirectToAction(nameof(Read), new { userId = updatedUser.Id });
         }
         catch (Exception ex)
         {
             throw;
+        }
+    }
+
+    [HttpPost("delete/{userId}")]
+    public async Task<IActionResult> Delete(long userId)
+    {
+        try
+        {
+            await _userService.DeleteUser(userId);
+            return RedirectToAction(nameof(List));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return View("Error");
         }
     }
 }

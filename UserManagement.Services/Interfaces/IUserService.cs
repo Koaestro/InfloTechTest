@@ -11,7 +11,11 @@ public interface IUserService
     /// </summary>
     /// <param name="isActive"></param>
     /// <returns></returns>
-    IEnumerable<UserDto> FilterByActive(bool isActive);
-    IEnumerable<UserDto> GetAll();
-    Task<long> CreateUser(UserDto userDto);
+    IEnumerable<UserReadDto> FilterByActive(bool isActive);
+    IEnumerable<UserReadDto> GetAll();
+    Task<UserReadDto> GetUser(long userId);
+    Task<long> CreateUser(UserWriteDto userDto);
+    Task<UserReadDto> UpdateUser(UserWriteDto userDto);
+    Task DeleteUser(long userId);
+
 }

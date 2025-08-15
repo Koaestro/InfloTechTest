@@ -30,3 +30,10 @@
     <label>Date of Birth</label>
     <input class="form-control" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")" readonly />
 </div>
+
+<hr />
+
+<div class="mt-3">
+    <a class="btn btn-primary" asp-action="@nameof(UsersController.Update)" asp-route-userId="@Model.Id">Edit</a>
+    <a class="btn btn-secondary" asp-action="@nameof(UsersController.List)">Back to List</a>
+</div>

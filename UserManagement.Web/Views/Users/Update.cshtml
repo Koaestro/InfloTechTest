@@ -1,12 +1,12 @@
-﻿@model UserCreateViewModel
+﻿@model UserUpdateViewModel
 
 @{
-    ViewData["Title"] = "Create User";
+    ViewData["Title"] = "Edit User";
 }
 
-<h2>Create User</h2>
+<h2>Edit User</h2>
 
-<form asp-action="@nameof(UsersController.Create)" method="post">
+<form asp-action="Update" method="post">
     <div class="form-group">
         <label asp-for="Forename"></label>
         <input asp-for="Forename" class="form-control" />
@@ -36,6 +36,6 @@
         <span asp-validation-for="DateOfBirth" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Create</button>
+    <button type="submit" class="btn btn-primary">Edit</button>
     <a class="btn btn-secondary" asp-action="@nameof(UsersController.List)">Back to List</a>
 </form>

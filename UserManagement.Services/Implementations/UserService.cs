@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UserManagement.Data;
@@ -18,14 +19,28 @@ public class UserService : IUserService
     /// </summary>
     /// <param name="isActive"></param>
     /// <returns></returns>
-    public IEnumerable<UserDto> FilterByActive(bool isActive)
+    public IEnumerable<UserReadDto> FilterByActive(bool isActive)
     {
-        return _dataAccess.GetAll<User>().Where(u => u.IsActive == isActive).Select(u => new UserDto(u));
+        return _dataAccess.GetAll<User>().Where(u => u.IsActive == isActive).Select(u => new UserReadDto(u));
     }
 
-    public IEnumerable<UserDto> GetAll() => _dataAccess.GetAll<User>().Select(u => new UserDto(u));
+    public IEnumerable<UserReadDto> GetAll() => _dataAccess.GetAll<User>().Select(u => new UserReadDto(u));
 
-    public async Task<long> CreateUser(UserDto userDto)
+    public async Task<UserReadDto> GetUser(long userId)
+    {
+        var user = await _dataAccess.GetById<User>(userId);
+
+        if (user is null)
+        {
+            throw new Exception($"User with Id {userId} not found");
+        } else
+        {
+            return new UserReadDto(user);
+        }
+
+    }
+
+    public async Task<long> CreateUser(UserWriteDto userDto)
     {
         User user = new()
         {
@@ -39,5 +54,36 @@ public class UserService : IUserService
 
         return user.Id;
     }
+
+    public async Task<UserReadDto> UpdateUser(UserWriteDto userDto)
+    {
+        if (userDto.Id == null)
+            throw new ArgumentException("User ID must be provided for update.");
+
+        var user = await _dataAccess.GetById<User>(userDto.Id.Value);
+
+        if (user == null)
+            throw new Exception($"User with ID {userDto.Id.Value} not found.");
+
+        user.Forename = userDto.Forename;
+        user.Surname = userDto.Surname;
+        user.Email = userDto.Email;
+        user.IsActive = userDto.IsActive;
+        user.DateOfBirth = userDto.DateOfBirth;
+
+        await _dataAccess.UpdateAsync<User>(user);
+
+        return new UserReadDto(user);
+    }
+
+    public async Task DeleteUser(long userId)
+    {
+        var user = await _dataAccess.GetById<User>(userId);
+        if (user == null)
+            throw new Exception($"User with ID {userId} not found.");
+
+        await _dataAccess.DeleteAsync(user);
+    }
+
 
 }

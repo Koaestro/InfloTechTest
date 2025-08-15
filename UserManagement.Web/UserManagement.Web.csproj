@@ -16,4 +16,8 @@
     <ProjectReference Include="..\UserManagement.Services\UserManagement.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\sweetalert2\dist\" />
+  </ItemGroup>
+
 </Project>
