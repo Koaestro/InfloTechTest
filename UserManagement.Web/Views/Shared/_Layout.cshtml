@@ -29,10 +29,20 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="usersDropdown">
                                 <li>
-                                    <a class="dropdown-item" asp-controller="Users" asp-action="List">List Users</a>
+                                    <a class="dropdown-item" asp-controller="@UsersController.NAME" asp-action="@nameof(UsersController.List)">List Users</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" asp-controller="Users" asp-action="Create">Create User</a>
+                                    <a class="dropdown-item" asp-controller="@UsersController.NAME" asp-action="@nameof(UsersController.Create)">Create User</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="logsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Logs
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="logsDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="@LogsController.NAME" asp-action="@nameof(LogsController.List)">List Logs</a>
                                 </li>
                             </ul>
                         </li>

@@ -14,7 +14,12 @@ public class UsersController : Controller
     public static readonly string NAME = "Users";
 
     private readonly IUserService _userService;
-    public UsersController(IUserService userService) => _userService = userService;
+    private readonly ILogService _logService;
+    public UsersController(IUserService userService, ILogService logService)
+    {
+        _userService = userService;
+        _logService = logService;
+    }
 
     [HttpGet("")]
     public ViewResult List(UserFilter? filter = null)
@@ -87,6 +92,8 @@ public class UsersController : Controller
             };
 
             var userId = await _userService.CreateUser(userDto);
+
+            await _logService.LogAsync(new LogWriteDto(ActionType.Create, EntityType.User, userId, $"Created User {userId}"));
 
             return RedirectToAction(nameof(Read), new { userId });
         }

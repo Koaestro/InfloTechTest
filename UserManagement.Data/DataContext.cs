@@ -30,9 +30,12 @@ public class DataContext : DbContext, IDataContext
         });
 
     public DbSet<User>? Users { get; set; }
+    public DbSet<Log>? Logs { get; set; }
 
     public IQueryable<TEntity> GetAll<TEntity>() where TEntity : class
         => base.Set<TEntity>();
+
+
 
     public Task<TEntity?> GetById<TEntity>(long id) where TEntity : class, IEntity
         => base.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);
