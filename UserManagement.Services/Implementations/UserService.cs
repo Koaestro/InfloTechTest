@@ -6,13 +6,19 @@ using UserManagement.Data;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
 using UserManagement.Services.Dtos;
+using UserManagement.Web.Enums;
 
 namespace UserManagement.Services.Domain.Implementations;
 
 public class UserService : IUserService
 {
     private readonly IDataContext _dataAccess;
-    public UserService(IDataContext dataAccess) => _dataAccess = dataAccess;
+    private readonly ILogService _logService;
+    public UserService(IDataContext dataAccess, ILogService logService)
+    {
+        _dataAccess = dataAccess;
+        _logService = logService;
+    }
 
     /// <summary>
     /// Return users by active state
@@ -52,6 +58,8 @@ public class UserService : IUserService
         };
         await _dataAccess.CreateAsync<User>(user);
 
+        await _logService.LogAsync(new(ActionType.Create, EntityType.User, user.Id, $"Created User {user.Id}"));
+
         return user.Id;
     }
 
@@ -73,6 +81,8 @@ public class UserService : IUserService
 
         await _dataAccess.UpdateAsync<User>(user);
 
+        await _logService.LogAsync(new(ActionType.Update, EntityType.User, user.Id, $"Updated User {user.Id}", userDto, new UserReadDto(user)));
+
         return new UserReadDto(user);
     }
 
@@ -82,6 +92,7 @@ public class UserService : IUserService
         if (user == null)
             throw new Exception($"User with ID {userId} not found.");
 
+        await _logService.LogAsync(new(ActionType.Delete, EntityType.User, user.Id, $"Deleted User {user.Id}"));
         await _dataAccess.DeleteAsync(user);
     }
 

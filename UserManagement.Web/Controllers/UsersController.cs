@@ -93,8 +93,6 @@ public class UsersController : Controller
 
             var userId = await _userService.CreateUser(userDto);
 
-            await _logService.LogAsync(new LogWriteDto(ActionType.Create, EntityType.User, userId, $"Created User {userId}"));
-
             return RedirectToAction(nameof(Read), new { userId });
         }
         catch (Exception ex)

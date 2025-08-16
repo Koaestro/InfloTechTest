@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DataTables.AspNet.AspNetCore" Version="2.0.2" />
+    <PackageReference Include="DataTables.AspNet.Core" Version="2.0.2" />
     <PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.23.0" />
   </ItemGroup>
 

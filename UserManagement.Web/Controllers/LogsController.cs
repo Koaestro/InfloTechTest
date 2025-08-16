@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using DataTables.AspNet.AspNetCore;
+using DataTables.AspNet.Core;
+using UserManagement.Services.Domain.Implementations;
 using UserManagement.Services.Domain.Interfaces;
 using UserManagement.Services.Dtos;
 using UserManagement.Web.Enums;
+using UserManagement.Web.Extensions;
+using UserManagement.Web.Models;
 using UserManagement.Web.Models.Logs;
 using UserManagement.Web.Models.Users;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace UserManagement.Web.Controllers;
 
@@ -49,36 +56,75 @@ public class LogsController : Controller
             throw;
         }
     }
-    /*
-    [HttpPost("create")]
-    public async Task<IActionResult> Create(UserCreateViewModel user)
+
+    [HttpPost("get-logs")]
+    public async Task<IActionResult> GetLogs(IDataTablesRequest request)
     {
         try
         {
-            if (!ModelState.IsValid)
+            // Manually read actionType and entityType from the form or query string
+            var actionTypeValue = HttpContext.Request.Form["actionType"].FirstOrDefault();
+            var entityTypeValue = HttpContext.Request.Form["entityType"].FirstOrDefault();
+
+            int? actionType = null;
+            int? entityType = null;
+
+            if (int.TryParse(actionTypeValue, out var at))
+                actionType = at;
+
+            if (int.TryParse(entityTypeValue, out var et))
+                entityType = et;
+
+            var logs = await _logService.GetAll();
+
+            if (actionType.HasValue)
+                logs = logs.Where(l => (int)l.ActionType == actionType.Value);
+
+            if (entityType.HasValue)
+                logs = logs.Where(l => (int)l.EntityType == entityType.Value);
+
+            var allLogs = logs.Select(l => new LogDataTableItemViewModel
             {
-                // Return the same view with validation errors
-                return View(user);
-            }
+                Id = l.Id,
+                ActionType = l.ActionType.ToString(),
+                EntityType = l.EntityType.ToString(),
+                EntityRef = l.EntityRef,
+                Details = l.Details,
+                By = l.By,
+                At = l.At
+            }).AsQueryable();
 
-            UserWriteDto userDto = new()
-            {
-                Forename = user.Forename,
-                Surname = user.Surname,
-                Email = user.Email,
-                IsActive = user.IsActive,
-                DateOfBirth = user.DateOfBirth
-            };
+            allLogs = allLogs.GlobalFilterBy(request.Search, request.Columns);
 
-            var userId = await _userService.CreateUser(userDto);
+            var filteredCount = allLogs.Count();
 
-            return RedirectToAction(nameof(Read), new { userId });
+            // Apply sorting with your extension
+            allLogs = allLogs.SortBy(request.Columns);
+
+            // Paging
+            var data = allLogs.Skip(request.Start).Take(request.Length).ToList();
+
+            var response = DataTablesResponse.Create(request, logs.Count(), filteredCount, data);
+            return new DataTablesJsonResult(response);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
+            return StatusCode(500, "Error processing logs");
+        }
+    }
+
+
+    [HttpGet("{logId}")]
+    public async Task<ViewResult> Read(long logId)
+    {
+        try
+        {
+            throw new NotImplementedException();
+        }
+        catch (Exception ex)
+        {
             throw;
         }
-
-    }*/
+    }
 }

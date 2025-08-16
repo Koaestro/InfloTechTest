@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using UserManagement.Models;
 using UserManagement.Web.Enums;
 
@@ -19,14 +20,14 @@ public class LogWriteDto
     /// <param name="details">Details to be logged</param>
     /// <param name="from">Original data</param>
     /// <param name="to">Updated data</param>
-    public LogWriteDto(ActionType actionType, EntityType entityType, long entityRef, string details, string? from = null, string? to = null)
+    public LogWriteDto(ActionType actionType, EntityType entityType, long entityRef, string details, object? from = null, object? to = null)
     {
         ActionType = actionType;
         EntityType = entityType;
         EntityRef = entityRef;
         Details = details;
-        From = from;
-        To = to;
+        From = from is null ? null : JsonSerializer.Serialize(from);
+        To = to is null ? null : JsonSerializer.Serialize(to);
         By = "System"; //TODO: change this when adding usernames
         At = DateTime.UtcNow;
     }

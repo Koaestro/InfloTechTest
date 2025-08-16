@@ -2,53 +2,106 @@
 @model LogListViewModel
 <h2>Log List</h2>
 
-<div class="table-responsive">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Entity Type</th>
-                <th>Entity Ref</th>
-                <th>Details</th>
-                <th>By</th>
-                <th>At</th>
-                <th style="width: 1px;"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Items)
-            {
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label for="actionTypeFilter">Action Type</label>
+            <select id="actionTypeFilter" class="form-select">
+                <option value="">All</option>
+                @foreach (var actionType in Model.ActionTypes)
+                {
+                    var actionTypeId = (int)actionType;
+                    <option value="@actionTypeId">@actionType.ToString()</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="entityTypeFilter">Entity Type</label>
+            <select id="entityTypeFilter" class="form-select">
+                <option value="">All</option>
+                @foreach (var entityType in Model.EntityTypes)
+                {
+                    var entityTypeId = (int)entityType;
+                    <option value="@entityTypeId">@entityType.ToString()</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped" id="logsTable">
+            <thead>
                 <tr>
-                    <td>
-                        @item.Id
-                    </td>
-                    <td>
-                        @item.EntityType.ToString()
-                    </td>
-                    <td>
-                        @item.EntityRef
-                    </td>
-                    <td>
-                        @item.Details
-                    </td>
-                    <td>
-                        @item.By
-                    </td>
-                    <td>
-                        @item.At.ToString()
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="btnToggleActions">
-                                Actions
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="btnToggleActions">
-                                @*<li><a class="dropdown-item" asp-controller="@LogController.NAME" asp-action="@nameof(LogController.Read)" asp-route-userId="@item.Id">View</a></li>*@
-                            </ul>
-                        </div>
-                    </td>
+                    <th>Id</th>
+                    <th>Action Type</th>
+                    <th>Entity Type</th>
+                    <th>Entity Ref</th>
+                    <th>Details</th>
+                    <th>By</th>
+                    <th>At</th>
+                    <th style="width: 1px;"></th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+        </table>
+    </div>
+
 </div>
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var datatable = $('#logsTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '@Url.Action(nameof(LogsController.GetLogs), @LogsController.NAME)',
+                    type: 'POST',
+                    data: function (d) {
+                        d.actionType = $('#actionTypeFilter').val();  
+                        d.entityType = $('#entityTypeFilter').val(); 
+                    }
+                },
+                columns: [
+                    { data: 'id' },
+                    { data: 'actionType' },
+                    { data: 'entityType' },
+                    { data: 'entityRef' },
+                    { data: 'details' },
+                    { data: 'by' },
+                    {
+                        data: 'at',
+                        render: function (data) {
+                            return new Date(data).toLocaleString();
+                        }
+                    },
+                    {
+                        data: "id",
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            var url = '@Url.Action("Read", LogsController.NAME, new { logId = "__logId__" })'.replace('__logId__', data);
+                            return `<div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" data-bs-toggle="dropdown">
+                                            Actions
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="${url}">View</a></li>
+                                        </ul>
+                                    </div>`;
+                            }
+                    }
+                ]
+            });
+
+
+            $('#actionTypeFilter, #entityTypeFilter').on('change', function () {
+                datatable.ajax.reload();
+            });
+
+        });
+
+
+    </script>
+}

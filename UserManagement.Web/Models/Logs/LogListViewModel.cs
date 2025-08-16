@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UserManagement.Web.Enums;
 
 namespace UserManagement.Web.Models.Logs;
@@ -6,6 +7,10 @@ namespace UserManagement.Web.Models.Logs;
 public class LogListViewModel
 {
     public List<LogListItemViewModel> Items { get; set; } = new();
+
+    // New properties to hold enum values for dropdowns
+    public IEnumerable<ActionType> ActionTypes { get { return Enum.GetValues(typeof(ActionType)).Cast<ActionType>(); } }
+    public IEnumerable<EntityType> EntityTypes { get { return Enum.GetValues(typeof(EntityType)).Cast<EntityType>(); } }
 }
 
 public class LogListItemViewModel

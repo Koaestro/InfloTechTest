@@ -1,3 +1,4 @@
+using DataTables.AspNet.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Westwind.AspNetCore.Markdown;
@@ -10,6 +11,8 @@ builder.Services
     .AddDomainServices()
     .AddMarkdown()
     .AddControllersWithViews();
+
+builder.Services.RegisterDataTables();
 
 var app = builder.Build();
 
