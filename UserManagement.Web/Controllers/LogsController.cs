@@ -4,6 +4,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using DataTables.AspNet.AspNetCore;
 using DataTables.AspNet.Core;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UserManagement.Services.Domain.Implementations;
 using UserManagement.Services.Domain.Interfaces;
 using UserManagement.Services.Dtos;
@@ -120,7 +122,32 @@ public class LogsController : Controller
     {
         try
         {
-            throw new NotImplementedException();
+            var log = await _logService.GetLog(logId);
+
+            LogReadViewModel vm = new()
+            {
+                Id = log.Id,
+                ActionType = log.ActionType,
+                EntityType = log.EntityType,
+                EntityRef = log.EntityRef,
+                Details = log.Details,
+                By = log.By,
+                At = log.At
+            };
+
+            // Prettify JSON
+
+            if (log.From is not null)
+            {
+                vm.From = JToken.Parse(log.From).ToString();
+            }
+
+            if (log.To is not null)
+            {
+                vm.To = JToken.Parse(log.To).ToString();
+            }
+
+            return View(vm);
         }
         catch (Exception ex)
         {

@@ -38,4 +38,18 @@ public class LogService : ILogService
         await _dataAccess.CreateAsync<Log>(log);
     }
 
+    public async Task<LogReadDto> GetLog(long logId)
+    {
+        var log = await _dataAccess.GetById<Log>(logId);
+
+        if (log is null)
+        {
+            throw new Exception($"Log with Id {log} not found");
+        }
+        else
+        {
+            return new LogReadDto(log);
+        }
+    }
+
 }

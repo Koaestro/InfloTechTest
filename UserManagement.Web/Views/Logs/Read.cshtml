@@ -1,0 +1,69 @@
+﻿@model LogReadViewModel
+
+@{
+    ViewData["Title"] = "Read Log";
+}
+
+<h2>Log Details</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <label>Log ID</label>
+            <input class="form-control" value="@Model.Id" readonly />
+        </div>
+        <div class="col-md-6">
+            <label>Action Type</label>
+            <input class="form-control" value="@Model.ActionType" readonly />
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <label>Entity Type</label>
+            <input class="form-control" value="@Model.EntityType" readonly />
+        </div>
+        <div class="col-md-6">
+            <label>Entity Reference</label>
+            <input class="form-control" value="@Model.EntityRef" readonly />
+        </div>
+    </div>
+
+    @if(Model.From is not null || Model.To is not null)
+    {
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <label>From</label>
+                <textarea class="form-control" rows="5" readonly>@Model.From</textarea>
+            </div>
+            <div class="col-md-6">
+                <label>To</label>
+                <textarea class="form-control" rows="5" readonly>@Model.To</textarea>
+            </div>
+        </div>
+    }
+    
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <label>Details</label>
+            <textarea class="form-control" rows="3" readonly>@Model.Details</textarea>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <label>By</label>
+            <input class="form-control" value="@Model.By" readonly />
+        </div>
+        <div class="col-md-6">
+            <label>At</label>
+            <input class="form-control" value="@Model.At.ToString("yyyy-MM-dd HH:mm:ss")" readonly />
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="mt-3">
+        <a class="btn btn-secondary" asp-action="@nameof(LogsController.List)">Back to List</a>
+    </div>
+</div>

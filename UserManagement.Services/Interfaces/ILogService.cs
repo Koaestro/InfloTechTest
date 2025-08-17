@@ -14,4 +14,7 @@ public interface ILogService
 
     Task LogAsync(LogWriteDto logDto);
 
+
+    Task<LogReadDto> GetLog(long logId);
+
 }

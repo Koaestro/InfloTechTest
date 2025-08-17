@@ -14,11 +14,9 @@ public class UsersController : Controller
     public static readonly string NAME = "Users";
 
     private readonly IUserService _userService;
-    private readonly ILogService _logService;
-    public UsersController(IUserService userService, ILogService logService)
+    public UsersController(IUserService userService)
     {
         _userService = userService;
-        _logService = logService;
     }
 
     [HttpGet("")]
@@ -41,7 +39,8 @@ public class UsersController : Controller
                 Forename = p.Forename,
                 Surname = p.Surname,
                 Email = p.Email,
-                IsActive = p.IsActive
+                IsActive = p.IsActive,
+                DateOfBirth = p.DateOfBirth
             });
 
             var model = new UserListViewModel

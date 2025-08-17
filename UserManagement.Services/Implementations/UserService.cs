@@ -73,6 +73,8 @@ public class UserService : IUserService
         if (user == null)
             throw new Exception($"User with ID {userDto.Id.Value} not found.");
 
+        var originalUserDto = new UserReadDto(user);
+
         user.Forename = userDto.Forename;
         user.Surname = userDto.Surname;
         user.Email = userDto.Email;
@@ -81,7 +83,7 @@ public class UserService : IUserService
 
         await _dataAccess.UpdateAsync<User>(user);
 
-        await _logService.LogAsync(new(ActionType.Update, EntityType.User, user.Id, $"Updated User {user.Id}", userDto, new UserReadDto(user)));
+        await _logService.LogAsync(new(ActionType.Update, EntityType.User, user.Id, $"Updated User {user.Id}", originalUserDto, new UserReadDto(user)));
 
         return new UserReadDto(user);
     }

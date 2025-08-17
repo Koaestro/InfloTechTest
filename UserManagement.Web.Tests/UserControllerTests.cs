@@ -57,11 +57,11 @@ public class UserControllerTests
             .Should().BeOfType<UserListViewModel>().Which.Items.Should().AllSatisfy(i => i.IsActive.Should().BeFalse());
     }
 
-    private List<UserDto> SetupUsers(string forename = "Johnny", string surname = "User", string email = "juser@example.com", bool isActive = true)
+    private List<UserReadDto> SetupUsers(string forename = "Johnny", string surname = "User", string email = "juser@example.com", bool isActive = true)
     {
-        var users = new List<UserDto>()
+        var users = new List<UserReadDto>()
         {
-            new UserDto
+            new UserReadDto
             {
                 Forename = forename,
                 Surname = surname,
