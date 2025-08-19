@@ -1,3 +1,7 @@
+# Description
+
+This exercies has implemented sections 1 - 4 and has added some async functionality to the dataAccess layer.
+
 # User Management Technical Exercise
 
 The exercise is an ASP.NET Core web application backed by Entity Framework Core, which faciliates management of some fictional users.
